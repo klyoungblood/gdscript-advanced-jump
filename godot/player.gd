@@ -86,16 +86,17 @@ func _physics_process(delta):
 			movement = 0
 			if wasonfloor:
 				change_state(IDLE)
-			
-		# a bit of forced movement when kicking off a wall
-		if wallkick != 0 and lockwallcling > 0.0:
-			movement = wallkick
-			
+		
 		# set sprite facing direction
 		if movement > 0:
 			$Sprite.flip_h = false
 		elif movement < 0:
 			$Sprite.flip_h = true
+		
+		# a bit of forced movement when kicking off a wall
+		if wallkick != 0 and lockwallcling > 0.0:
+			movement = wallkick
+			
 	else:
 		# handle other forms of forced movement below (hitstun, etc)
 		pass
