@@ -35,10 +35,12 @@ func canwallgrab():
 func _ready():
 	change_state(IDLE)
 
+# input polling, note that we poll for left/right movement down in _physics_process
 func _input(event):
 	if event.is_action_pressed("jump"):
 		jumpreq=true
-	
+
+# used to set the player's animation state
 func change_state(new_state):
 	match new_state:
 		IDLE:
@@ -51,19 +53,21 @@ func change_state(new_state):
 			_animation_player.play("jump")
 			_animation_player.advance(0)
 		WALLCLING:
-			_animation_player.play("idle")
+			_animation_player.play("wallgrip")
 			_animation_player.advance(0)
 	state = new_state
 
+# logic related to testing if the player can jump in curent state
 func can_jump():
+	# must be on floor, or on wall and not prevented from wall cling
 	if wasonfloor or (wasonwall and lockwallcling <= 0.0):
 		wjumpused = false
 		return true
+	# or must not have used their double jump yet
 	if canwjump() == true:
 		if not wjumpused:
 			wjumpused = true
 			return true
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
@@ -147,7 +151,7 @@ func _physics_process(delta):
 		wallkick = 0
 		lockwallcling = 0.0
 		# reset animation to idle
-		if state == JUMP:
+		if state in [JUMP,WALLCLING]:
 			change_state(IDLE)
 
 	# also based on physics results, see if we hit a wall
