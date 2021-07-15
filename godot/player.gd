@@ -130,7 +130,7 @@ func _physics_process(delta):
 	
 	# set our Y axis velocity
 	# if holding a wall, used a fixed speed to slide down it
-	if wasonwall && lockwallcling < 0.0:
+	if wasonwall && lockwallcling <= 0.0:
 		velocity.y = wall_speed
 		change_state(WALLCLING)
 	else:
@@ -153,6 +153,9 @@ func _physics_process(delta):
 		# reset animation to idle
 		if state in [JUMP,WALLCLING]:
 			change_state(IDLE)
+	else:
+		if state in [IDLE,WALK]:
+			change_state(JUMP)
 
 	# also based on physics results, see if we hit a wall
 	wasonwall=is_on_wall()
