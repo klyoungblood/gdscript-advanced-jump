@@ -161,6 +161,12 @@ func _physics_process(delta):
 	# also based on physics results, see if we hit a wall
 	wasonwall=is_on_wall()
 	
+	if !wasonwall and state in [WALLCLING]:
+		if wasonfloor:
+			change_state(IDLE)
+		else:
+			change_state(JUMP)
+	
 	# if we can't wall grab, pretend we didn't hit a wall
 	if !canwallgrab():
 		wasonwall = false
